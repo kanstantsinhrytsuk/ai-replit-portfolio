@@ -1,26 +1,59 @@
-import * as React from "react"
-import * as SliderPrimitive from "@radix-ui/react-slider"
+import * as React from "react";
+import { Slider as MuiSlider, SxProps, Theme, alpha } from "@mui/material";
 
-import { cn } from "@/lib/utils"
+interface SliderProps {
+  defaultValue?: number | number[];
+  max?: number;
+  min?: number;
+  step?: number;
+  value?: number | number[];
+  onChange?: (event: Event, value: number | number[]) => void;
+  onChangeCommitted?: (event: React.SyntheticEvent | Event, value: number | number[]) => void;
+  disabled?: boolean;
+  marks?: boolean | { value: number; label?: string }[];
+  valueLabelDisplay?: 'on' | 'auto' | 'off';
+  orientation?: 'horizontal' | 'vertical';
+  sx?: SxProps<Theme>;
+  className?: string;
+}
 
-const Slider = React.forwardRef<
-  React.ElementRef<typeof SliderPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <SliderPrimitive.Root
-    ref={ref}
-    className={cn(
-      "relative flex w-full touch-none select-none items-center",
-      className
-    )}
-    {...props}
-  >
-    <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
-      <SliderPrimitive.Range className="absolute h-full bg-primary" />
-    </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
-  </SliderPrimitive.Root>
-))
-Slider.displayName = SliderPrimitive.Root.displayName
+const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
+  ({ sx, className, ...props }, ref) => (
+    <MuiSlider
+      ref={ref}
+      sx={{
+        height: 8,
+        padding: '13px 0',
+        '& .MuiSlider-thumb': {
+          height: 20,
+          width: 20,
+          backgroundColor: 'background.paper',
+          border: '2px solid',
+          borderColor: 'primary.main',
+          '&:focus, &:hover, &.Mui-active': {
+            boxShadow: `0 0 0 8px ${alpha('#1976d2', 0.16)}`,
+          },
+          '&.Mui-disabled': {
+            pointerEvents: 'none',
+            opacity: 0.5,
+          },
+        },
+        '& .MuiSlider-track': {
+          height: 8,
+          backgroundColor: 'primary.main',
+        },
+        '& .MuiSlider-rail': {
+          height: 8,
+          backgroundColor: 'action.selected',
+          borderRadius: 4,
+        },
+        ...sx
+      }}
+      {...props}
+    />
+  )
+);
 
-export { Slider }
+Slider.displayName = "Slider";
+
+export { Slider };
