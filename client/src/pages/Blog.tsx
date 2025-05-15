@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "wouter";
 
 const Blog = () => {
   // In a real app, this would likely fetch blog posts from an API

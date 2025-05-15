@@ -7,6 +7,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import 'swiper/css/bundle';
 import { portfolioItems } from "@/lib/data";
 
 const PortfolioSection = () => {
@@ -86,6 +87,14 @@ const PortfolioSection = () => {
             modules={[Navigation, Pagination]}
             spaceBetween={24}
             slidesPerView={slidesPerView}
+            onInit={(swiper) => {
+              // @ts-ignore
+              swiper.params.navigation.prevEl = prevRef.current;
+              // @ts-ignore
+              swiper.params.navigation.nextEl = nextRef.current;
+              swiper.navigation.init();
+              swiper.navigation.update();
+            }}
             navigation={{
               prevEl: prevRef.current,
               nextEl: nextRef.current,
@@ -95,12 +104,6 @@ const PortfolioSection = () => {
               el: '.pagination-dots',
               bulletClass: 'inline-block w-3 h-3 rounded-full bg-gray-200 mx-1 cursor-pointer transition-colors',
               bulletActiveClass: '!bg-primary',
-            }}
-            onBeforeInit={(swiper) => {
-              // @ts-ignore
-              swiper.params.navigation.prevEl = prevRef.current;
-              // @ts-ignore
-              swiper.params.navigation.nextEl = nextRef.current;
             }}
             className="pb-12"
           >
