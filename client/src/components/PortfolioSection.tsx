@@ -128,10 +128,11 @@ const PortfolioSection = () => {
                       ))}
                     </div>
                     <div className="mt-4">
-                      <Link href={`/portfolio/${item.id}`}>
-                        <a className="inline-block bg-accent text-dark rounded-full py-2 px-5 text-sm font-medium hover:bg-accent/90 transition-colors">
-                          View Details
-                        </a>
+                      <Link 
+                        href={`/portfolio/${item.id}`}
+                        className="inline-block bg-accent text-gray-900 rounded-full py-2 px-5 text-sm font-medium hover:bg-accent/90 transition-colors"
+                      >
+                        View Details
                       </Link>
                     </div>
                   </div>

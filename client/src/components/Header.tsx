@@ -29,25 +29,23 @@ const Header = ({ onContactClick }: HeaderProps) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <Link href="/">
-          <a className="flex items-center gap-2">
-            <div className="w-10 h-10 flex items-center justify-center bg-primary rounded-lg">
-              <span className="text-white font-bold">CM</span>
-            </div>
-            <span className="font-heading font-bold text-lg hidden sm:block">Cristian Muffat</span>
-          </a>
+        <Link href="/" className="flex items-center gap-2">
+          <div className="w-10 h-10 flex items-center justify-center bg-primary rounded-lg">
+            <span className="text-white font-bold">CM</span>
+          </div>
+          <span className="font-heading font-bold text-lg hidden sm:block">Cristian Muffat</span>
         </Link>
         
         <nav className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href}>
-              <a 
-                className={`font-medium text-sm hover:text-primary transition-colors ${
-                  location === link.href ? 'text-primary' : ''
-                }`}
-              >
-                {link.label}
-              </a>
+            <Link 
+              key={link.href} 
+              href={link.href}
+              className={`font-medium text-sm hover:text-primary transition-colors ${
+                location === link.href ? 'text-primary' : ''
+              }`}
+            >
+              {link.label}
             </Link>
           ))}
         </nav>
@@ -61,7 +59,7 @@ const Header = ({ onContactClick }: HeaderProps) => {
         
         <button 
           onClick={toggleMobileMenu}
-          className="md:hidden text-dark"
+          className="md:hidden text-gray-900"
           aria-label="Toggle mobile menu"
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -80,15 +78,15 @@ const Header = ({ onContactClick }: HeaderProps) => {
           >
             <nav className="flex flex-col space-y-3">
               {navLinks.map((link) => (
-                <Link key={link.href} href={link.href}>
-                  <a 
-                    onClick={closeMobileMenu}
-                    className={`font-medium text-sm hover:text-primary transition-colors px-2 py-1 ${
-                      location === link.href ? 'text-primary' : ''
-                    }`}
-                  >
-                    {link.label}
-                  </a>
+                <Link 
+                  key={link.href} 
+                  href={link.href}
+                  onClick={closeMobileMenu}
+                  className={`font-medium text-sm hover:text-primary transition-colors px-2 py-1 ${
+                    location === link.href ? 'text-primary' : ''
+                  }`}
+                >
+                  {link.label}
                 </Link>
               ))}
             </nav>
