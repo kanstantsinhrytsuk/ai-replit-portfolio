@@ -84,7 +84,7 @@ const Blog = () => {
                 <span className="text-gray-500 text-sm">{post.date}</span>
                 <h2 className="font-heading font-semibold text-xl mt-2 mb-3">{post.title}</h2>
                 <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                <a 
+                <Link 
                   href={`/blog/${post.id}`} 
                   className="text-primary font-medium hover:underline inline-flex items-center"
                 >
@@ -92,7 +92,7 @@ const Blog = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
-                </a>
+                </Link>
               </div>
             </motion.article>
           ))}

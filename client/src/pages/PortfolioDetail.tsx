@@ -47,10 +47,11 @@ const PortfolioDetail = () => {
       transition={{ duration: 0.3 }}
     >
       <div className="container mx-auto">
-        <Link href="/#portfolio">
-          <a className="inline-flex items-center text-gray-600 hover:text-primary mb-8 transition-colors">
-            <ArrowLeft size={18} className="mr-2" /> Back to Portfolio
-          </a>
+        <Link 
+          href="/#portfolio" 
+          className="inline-flex items-center text-gray-600 hover:text-primary mb-8 transition-colors"
+        >
+          <ArrowLeft size={18} className="mr-2" /> Back to Portfolio
         </Link>
 
         <div className="bg-white rounded-xl shadow-md overflow-hidden mb-10">
