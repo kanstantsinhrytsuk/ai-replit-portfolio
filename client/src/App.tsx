@@ -10,6 +10,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import PortfolioDetail from "@/pages/PortfolioDetail";
 import Blog from "@/pages/Blog";
+import BlogDetail from "@/pages/BlogDetail";
 import { useState } from "react";
 import ContactModal from "@/components/ContactModal";
 
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/portfolio/:id" component={PortfolioDetail} />
       <Route path="/blog" component={Blog} />
+      <Route path="/blog/:id" component={BlogDetail} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,35 +1,8 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
+import { blogPostsData } from "@/lib/blogData";
 
 const Blog = () => {
-  // In a real app, this would likely fetch blog posts from an API
-  const blogPosts = [
-    {
-      id: "1",
-      title: "The Evolution of UI Design Trends",
-      excerpt: "Exploring how UI design trends have evolved over the past decade and what's coming next.",
-      date: "June 15, 2023",
-      imageUrl: "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=800&q=80",
-      category: "Design"
-    },
-    {
-      id: "2",
-      title: "Creating Accessible Web Applications",
-      excerpt: "Best practices for building web applications that everyone can use, regardless of abilities.",
-      date: "May 22, 2023",
-      imageUrl: "https://images.unsplash.com/photo-1551033406-611cf9a28f67?auto=format&fit=crop&w=800&q=80",
-      category: "Development"
-    },
-    {
-      id: "3",
-      title: "The Importance of User Testing",
-      excerpt: "Why user testing should be an integral part of your design process and how to do it effectively.",
-      date: "April 10, 2023",
-      imageUrl: "https://images.unsplash.com/photo-1543286386-713bdd548da4?auto=format&fit=crop&w=800&q=80",
-      category: "UX Research"
-    }
-  ];
-
   return (
     <motion.div
       className="pt-28 pb-16 px-4"
@@ -59,7 +32,7 @@ const Blog = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogPosts.map((post, index) => (
+          {blogPostsData.map((post, index) => (
             <motion.article 
               key={post.id} 
               className="bg-white rounded-xl shadow-md overflow-hidden"
