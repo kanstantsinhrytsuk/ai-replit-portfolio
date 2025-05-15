@@ -1,24 +1,39 @@
-import * as React from "react"
-import * as LabelPrimitive from "@radix-ui/react-label"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react";
+import { InputLabel as MuiInputLabel, SxProps, Theme } from "@mui/material";
 
-import { cn } from "@/lib/utils"
+// Basic Label component using MUI InputLabel
+export interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
+  required?: boolean;
+  disabled?: boolean;
+  error?: boolean;
+  sx?: SxProps<Theme>;
+}
 
-const labelVariants = cva(
-  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-)
+const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
+  ({ className, required, disabled, error, sx, ...props }, ref) => (
+    <MuiInputLabel
+      ref={ref}
+      required={required}
+      error={error}
+      sx={{
+        fontSize: '0.875rem',
+        fontWeight: 500,
+        lineHeight: 1.5,
+        cursor: disabled ? 'not-allowed' : 'default',
+        opacity: disabled ? 0.7 : 1,
+        color: error ? 'error.main' : 'text.primary',
+        position: 'relative',
+        transform: 'none',
+        '&.Mui-focused': {
+          color: error ? 'error.main' : 'primary.main',
+        },
+        ...sx
+      }}
+      {...props}
+    />
+  )
+);
 
-const Label = React.forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> &
-    VariantProps<typeof labelVariants>
->(({ className, ...props }, ref) => (
-  <LabelPrimitive.Root
-    ref={ref}
-    className={cn(labelVariants(), className)}
-    {...props}
-  />
-))
-Label.displayName = LabelPrimitive.Root.displayName
+Label.displayName = "Label";
 
-export { Label }
+export { Label };
