@@ -1,61 +1,118 @@
-import { motion } from "framer-motion";
-import { Link } from "wouter";
-import { Instagram, Facebook, Linkedin, Twitter } from "lucide-react";
+import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import { 
+  Box, 
+  Container, 
+  Typography, 
+  IconButton,
+  Stack
+} from '@mui/material';
+
+// Define the animation keyframes in CSS
+const keyframes = `
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+`;
 
 const Footer = () => {
   const socialLinks = [
-    { icon: <Instagram size={20} />, url: "#", label: "Instagram" },
-    { icon: <Facebook size={20} />, url: "#", label: "Facebook" },
-    { icon: <Linkedin size={20} />, url: "#", label: "LinkedIn" },
-    { icon: <Twitter size={20} />, url: "#", label: "Twitter" },
+    { icon: <InstagramIcon fontSize="small" />, url: "#", label: "Instagram" },
+    { icon: <FacebookIcon fontSize="small" />, url: "#", label: "Facebook" },
+    { icon: <LinkedInIcon fontSize="small" />, url: "#", label: "LinkedIn" },
+    { icon: <TwitterIcon fontSize="small" />, url: "#", label: "Twitter" },
   ];
 
   return (
-    <motion.footer 
-      className="bg-[#f5f5ff] pt-16 pb-8 px-4 relative"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+    <Box
+      component="footer"
+      sx={{ 
+        bgcolor: '#f5f5ff',
+        pt: 8, 
+        pb: 4, 
+        px: 2,
+        position: 'relative'
+      }}
     >
-      <div className="container mx-auto">
-        <motion.div 
-          className="flex justify-center gap-6 mb-10"
-          initial={{ y: 20, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+      {/* Add keyframes styles to the document */}
+      <style>{keyframes}</style>
+      
+      <Container maxWidth="lg">
+        <Stack
+          direction="row"
+          spacing={2}
+          justifyContent="center"
+          mb={5}
+          sx={{ 
+            animation: 'fadeInUp 0.6s ease-out'
+          }}
         >
           {socialLinks.map((social, index) => (
-            <motion.a
+            <IconButton
               key={index}
+              component="a"
               href={social.url}
-              className="w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors"
               aria-label={social.label}
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
+              sx={{
+                bgcolor: 'white',
+                boxShadow: 2,
+                color: 'text.secondary',
+                '&:hover': {
+                  bgcolor: 'primary.main',
+                  color: 'white',
+                  transform: 'translateY(-5px)',
+                },
+                width: 40,
+                height: 40,
+                transition: 'transform 0.2s ease-out, background-color 0.2s ease-out, color 0.2s ease-out',
+                animationName: 'fadeInUp',
+                animationDuration: '0.5s',
+                animationTimingFunction: 'ease-out',
+                animationDelay: `${index * 0.1}s`,
+                animationFillMode: 'both'
+              }}
             >
               {social.icon}
-            </motion.a>
+            </IconButton>
           ))}
-        </motion.div>
+        </Stack>
         
-        <motion.div 
-          className="text-center text-gray-500 text-sm"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          align="center"
+          sx={{ 
+            animationName: 'fadeIn',
+            animationDuration: '0.6s',
+            animationTimingFunction: 'ease-out',
+            animationDelay: '0.3s',
+            animationFillMode: 'both'
+          }}
         >
-          <p>Cristian Muffat Portfolio Company © @cristianmuffat • {new Date().getFullYear()}</p>
-        </motion.div>
+          Cristian Muffat Portfolio Company © @cristianmuffat • {new Date().getFullYear()}
+        </Typography>
         
-        <div className="absolute right-4 bottom-4 dot-pattern w-20 h-20 opacity-30"></div>
-      </div>
-    </motion.footer>
+        <Box 
+          sx={{ 
+            position: 'absolute',
+            right: 4, 
+            bottom: 4,
+            width: 80,
+            height: 80,
+            opacity: 0.3,
+            backgroundImage: 'radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 2px)',
+            backgroundSize: '15px 15px'
+          }} 
+        />
+      </Container>
+    </Box>
   );
 };
 
