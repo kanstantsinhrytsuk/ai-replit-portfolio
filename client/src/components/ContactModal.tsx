@@ -1,21 +1,22 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
-import { useForm } from "react-hook-form";
+import CloseIcon from '@mui/icons-material/Close';
+import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { 
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Button,
+  IconButton,
+  Typography,
+  Box,
+  Stack,
+  Backdrop
+} from "@mui/material";
+import { Snackbar, Alert } from "@mui/material";
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -31,7 +32,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
-  const { toast } = useToast();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -43,117 +44,137 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
   });
 
   const onSubmit = (data: FormValues) => {
-    toast({
-      title: "Message sent!",
-      description: "Thank you for your message. I'll get back to you soon.",
-    });
-    
+    setSnackbarOpen(true);
     form.reset();
     onClose();
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div 
-          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-        >
-          <motion.div 
-            className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 overflow-hidden"
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            transition={{ type: "spring", duration: 0.3 }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="font-heading font-bold text-xl">Contact Me</h3>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={onClose}
-                  className="w-8 h-8 rounded-full hover:bg-gray-100"
-                >
-                  <X size={18} />
-                </Button>
-              </div>
+    <>
+      <Dialog 
+        open={isOpen} 
+        onClose={onClose} 
+        maxWidth="sm" 
+        fullWidth
+        components={{
+          Backdrop: (props) => (
+            <Backdrop {...props} sx={{ backdropFilter: 'blur(4px)' }} />
+          )
+        }}
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 2,
+            m: 2
+          }
+        }}
+      >
+        <DialogTitle>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="h5" fontWeight="bold" fontFamily="'Poppins', sans-serif">
+              Contact Me
+            </Typography>
+            <IconButton onClick={onClose} size="small">
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        
+        <DialogContent>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <Stack spacing={3} mt={1}>
+              <Controller
+                control={form.control}
+                name="name"
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label="Your Name"
+                    placeholder="John Doe"
+                    variant="outlined"
+                    fullWidth
+                    error={!!fieldState.error}
+                    helperText={fieldState.error?.message}
+                  />
+                )}
+              />
               
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">Your Name</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="John Doe"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+              <Controller
+                control={form.control}
+                name="email"
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label="Email Address"
+                    placeholder="john@example.com"
+                    type="email"
+                    variant="outlined"
+                    fullWidth
+                    error={!!fieldState.error}
+                    helperText={fieldState.error?.message}
                   />
-                  
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">Email Address</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="john@example.com"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                )}
+              />
+              
+              <Controller
+                control={form.control}
+                name="message"
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label="Message"
+                    placeholder="Your message here..."
+                    variant="outlined"
+                    fullWidth
+                    multiline
+                    rows={4}
+                    error={!!fieldState.error}
+                    helperText={fieldState.error?.message}
                   />
-                  
-                  <FormField
-                    control={form.control}
-                    name="message"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">Message</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Your message here..."
-                            rows={4}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary resize-none"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
-                  >
-                    Send Message
-                  </Button>
-                </form>
-              </Form>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+                )}
+              />
+              
+              <Button 
+                type="submit" 
+                variant="contained"
+                sx={{ 
+                  py: 1.5, 
+                  bgcolor: 'hsl(270, 76%, 60%)',
+                  '&:hover': { bgcolor: 'hsl(270, 76%, 50%)' },
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  fontWeight: 'medium',
+                  fontSize: '1rem'
+                }}
+              >
+                Send Message
+              </Button>
+            </Stack>
+          </form>
+        </DialogContent>
+      </Dialog>
+      
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={handleSnackbarClose} 
+          severity="success" 
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          Message sent! Thank you for your message. I'll get back to you soon.
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
