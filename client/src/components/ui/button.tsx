@@ -1,56 +1,154 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
+import React from "react";
+import { Button as MuiButton, ButtonProps as MuiButtonProps } from "@mui/material";
 
-import { cn } from "@/lib/utils"
+// Define custom variant values in addition to MUI's standard ones
+type ButtonVariant = 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+type ButtonSize = 'default' | 'sm' | 'lg' | 'icon';
 
-const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-      },
-      size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  }
-)
-
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean
+export interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'size'> {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  asChild?: boolean;
 }
 
+// A simple Button component that uses MUI Button but with our custom styling
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+  ({ variant = 'default', size = 'default', asChild = false, className, sx, ...props }, ref) => {
+    // Determine MUI variant
+    let muiVariant: 'contained' | 'outlined' | 'text';
+    switch (variant) {
+      case 'outline':
+        muiVariant = 'outlined';
+        break;
+      case 'ghost':
+      case 'link':
+        muiVariant = 'text';
+        break;
+      default:
+        muiVariant = 'contained';
+    }
+    
+    // Determine proper MUI size
+    let muiSize: "small" | "medium" | "large";
+    if (size === 'sm') muiSize = 'small';
+    else if (size === 'lg') muiSize = 'large';
+    else muiSize = 'medium';
+    
+    // Style overrides based on variant
+    const variantStyles = {
+      ...(variant === 'destructive' && {
+        backgroundColor: 'error.main',
+        color: '#fff',
+        '&:hover': {
+          backgroundColor: 'error.dark',
+        },
+      }),
+      ...(variant === 'outline' && {
+        border: '1px solid',
+        borderColor: 'divider',
+        backgroundColor: 'background.paper',
+        '&:hover': {
+          backgroundColor: 'action.hover',
+        },
+      }),
+      ...(variant === 'secondary' && {
+        backgroundColor: 'grey.100',
+        color: 'grey.900',
+        '&:hover': {
+          backgroundColor: 'grey.200',
+        },
+      }),
+      ...(variant === 'ghost' && {
+        '&:hover': {
+          backgroundColor: 'action.hover',
+        },
+      }),
+      ...(variant === 'link' && {
+        color: 'primary.main',
+        textDecoration: 'none',
+        '&:hover': {
+          textDecoration: 'underline',
+          backgroundColor: 'transparent',
+        },
+      }),
+      ...(variant === 'default' && {
+        backgroundColor: 'primary.main',
+        color: '#fff',
+        '&:hover': {
+          backgroundColor: 'primary.dark',
+        },
+      }),
+    };
+    
+    // Style overrides based on size
+    const sizeStyles = {
+      ...(size === 'sm' && {
+        height: '2.25rem',
+        padding: '0 0.75rem',
+        fontSize: '0.875rem',
+      }),
+      ...(size === 'lg' && {
+        height: '2.75rem',
+        padding: '0 2rem',
+        fontSize: '0.875rem',
+      }),
+      ...(size === 'icon' && {
+        height: '2.5rem',
+        width: '2.5rem',
+        padding: 0,
+        minWidth: 'auto',
+      }),
+      ...(size === 'default' && {
+        height: '2.5rem',
+        padding: '0 1rem',
+        fontSize: '0.875rem',
+      }),
+    };
+    
+    // Base styles for all buttons
+    const baseStyles = {
+      borderRadius: '0.375rem',
+      textTransform: 'none',
+      fontWeight: 500,
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '0.5rem',
+      whiteSpace: 'nowrap',
+      '&:disabled': {
+        pointerEvents: 'none',
+        opacity: 0.5,
+      },
+      '& svg': {
+        pointerEvents: 'none',
+        width: '1rem',
+        height: '1rem',
+        flexShrink: 0,
+      },
+    };
+    
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+      <MuiButton
         ref={ref}
+        variant={muiVariant}
+        size={muiSize}
+        disableElevation
+        className={className}
+        sx={{
+          ...baseStyles,
+          ...sizeStyles,
+          ...variantStyles,
+          ...sx,
+        }}
         {...props}
       />
-    )
+    );
   }
-)
-Button.displayName = "Button"
+);
 
-export { Button, buttonVariants }
+Button.displayName = "Button";
+
+// For compatibility with existing code
+const buttonVariants = () => "";
+
+export { Button, buttonVariants };

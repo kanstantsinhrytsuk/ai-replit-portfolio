@@ -1,22 +1,66 @@
-import * as React from "react"
+import * as React from "react";
+import { TextField, TextFieldProps, styled } from "@mui/material";
 
-import { cn } from "@/lib/utils"
+// Create a styled TextField component that matches our textarea styles
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  width: '100%',
+  
+  '& .MuiInputBase-root': {
+    minHeight: '80px',
+    width: '100%',
+    borderRadius: '0.375rem',
+    backgroundColor: theme.palette.background.paper,
+    
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderWidth: '2px',
+      borderColor: theme.palette.primary.main,
+    },
+    
+    '&.Mui-disabled': {
+      cursor: 'not-allowed',
+      opacity: 0.5,
+    },
 
-const Textarea = React.forwardRef<
-  HTMLTextAreaElement,
-  React.ComponentProps<"textarea">
->(({ className, ...props }, ref) => {
-  return (
-    <textarea
-      className={cn(
-        "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        className
-      )}
-      ref={ref}
-      {...props}
-    />
-  )
-})
-Textarea.displayName = "Textarea"
+    '& textarea': {
+      fontSize: '0.875rem',
+      padding: '0.5rem 0.75rem',
+    },
 
-export { Textarea }
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.palette.divider,
+    },
+
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.palette.action.hover,
+    },
+  },
+
+  '& .MuiFormLabel-root': {
+    display: 'none', // We'll use separate labels usually
+  }
+}));
+
+// Extend TextField props to accept className for compatibility
+interface TextareaProps extends Omit<TextFieldProps, 'variant'> {
+  className?: string;
+}
+
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <StyledTextField
+        multiline
+        variant="outlined"
+        fullWidth
+        inputRef={ref}
+        InputLabelProps={{ shrink: true }}
+        {...props}
+        sx={{ minHeight: '80px', ...props.sx }}
+      />
+    );
+  }
+);
+
+Textarea.displayName = "Textarea";
+
+export { Textarea };
